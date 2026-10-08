@@ -27,6 +27,7 @@ from sglang.srt.utils.async_probe import maybe_detect_nan, sanitize_nan_logits
 from sglang.srt.utils.common import (
     get_bool_env_var,
     is_cuda,
+    is_flashinfer_available,
     is_gfx1250_supported,
     is_hip,
     is_musa,
@@ -35,10 +36,11 @@ from sglang.srt.utils.common import (
 )
 
 if is_cuda():
-    from flashinfer.sampling import (
-        min_p_sampling_from_probs,
-        top_k_top_p_sampling_from_probs,
-    )
+    if is_flashinfer_available():
+        from flashinfer.sampling import (
+            min_p_sampling_from_probs,
+            top_k_top_p_sampling_from_probs,
+        )
     from sgl_kernel import (
         top_k_renorm_prob,
         top_p_renorm_prob,
